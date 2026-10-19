@@ -41,7 +41,10 @@ class ConstructorPage(BasePage):
     def ingredient_count(self, ingredient_name):
         card = self.ingredient_by_name(ingredient_name)
         counters = card.find_elements(By.CSS_SELECTOR, '[class*="counter_counter__num"]')
-        return int(counters[0].text) if counters else 0
+        if not counters:
+            return 0
+        value = counters[0].text.strip() or (counters[0].get_attribute("textContent") or "").strip()
+        return int(value) if value else 0
 
     def add_to_basket(self, ingredient_name):
         card = self.ingredient_by_name(ingredient_name)
