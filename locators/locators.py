@@ -2,8 +2,8 @@ from selenium.webdriver.common.by import By
 
 
 class HeaderLocators:
-    CONSTRUCTOR = (By.CSS_SELECTOR, 'a[href="/"]')
-    FEED = (By.CSS_SELECTOR, 'a[href="/feed"]')
+    CONSTRUCTOR = (By.XPATH, '//a[@href="/"][contains(normalize-space(.),"Конструктор")]')
+    FEED = (By.XPATH, '//a[@href="/feed"][contains(normalize-space(.),"Лента")]')
 
 
 class ConstructorLocators:

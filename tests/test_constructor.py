@@ -34,7 +34,8 @@ class TestConstructor:
         page.open()
         page.open_ingredient_details()
         page.close_modal()
-        assert not driver.find_elements(*ConstructorLocators.MODAL)
+        assert not any(element.is_displayed() for element in
+                       driver.find_elements(*ConstructorLocators.MODAL))
 
     @allure.title("После перетаскивания счётчик ингредиента увеличивается")
     def test_ingredient_counter(self, driver, menu):
@@ -42,4 +43,4 @@ class TestConstructor:
         page.open()
         before = page.ingredient_count(menu["filling"])
         page.add_to_basket(menu["filling"])
-        assert page.ingredient_count(menu["filling"]) == before + 1
+        assert page.wait_ingredient_count(menu["filling"], before + 1)

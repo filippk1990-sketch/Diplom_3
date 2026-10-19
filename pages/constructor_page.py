@@ -46,6 +46,9 @@ class ConstructorPage(BasePage):
         value = counters[0].text.strip() or (counters[0].get_attribute("textContent") or "").strip()
         return int(value) if value else 0
 
+    def wait_ingredient_count(self, ingredient_name, expected):
+        return self.wait.until(lambda _: self.ingredient_count(ingredient_name) == expected)
+
     def add_to_basket(self, ingredient_name):
         card = self.ingredient_by_name(ingredient_name)
         target = self.visible(L.BASKET)

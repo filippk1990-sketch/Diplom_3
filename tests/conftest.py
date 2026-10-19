@@ -30,10 +30,12 @@ def driver(request):
     try:
         yield instance
     finally:
-        if getattr(request.node, "rep_call", None) and request.node.rep_call.failed:
-            allure.attach(instance.get_screenshot_as_png(), name="screenshot_on_failure",
-                          attachment_type=allure.attachment_type.PNG)
-        instance.quit()
+        try:
+            if getattr(request.node, "rep_call", None) and request.node.rep_call.failed:
+                allure.attach(instance.get_screenshot_as_png(), name="screenshot_on_failure",
+                              attachment_type=allure.attachment_type.PNG)
+        finally:
+            instance.quit()
 
 
 @pytest.hookimpl(hookwrapper=True)
