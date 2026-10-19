@@ -1,0 +1,26 @@
+name: Diplom_3 UI tests
+on:
+  push:
+  pull_request:
+jobs:
+  ui-tests:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chrome, firefox]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: python -m pip install -r requirements.txt
+      - name: Run UI tests
+        run: python -m pytest --browser=${{ matrix.browser }} --alluredir=allure-results
+      - name: Upload Allure results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: allure-${{ matrix.browser }}
+          path: allure-results/
