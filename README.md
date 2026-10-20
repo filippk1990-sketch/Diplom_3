@@ -1,5 +1,8 @@
 # Diplom_3 — Stellar Burgers / UI
 
+**Работа для сдачи:** Филипп Крощенко · когорта 53 · GitHub: [filippk1990-sketch](https://github.com/filippk1990-sketch).
+
+
 Selenium 4, Page Object, pytest, Allure. Тестируются переходы, модальное окно, счётчик ингредиентов и лента заказов. Вход через UI, создание временного пользователя и удаление через API.
 
 ```powershell
