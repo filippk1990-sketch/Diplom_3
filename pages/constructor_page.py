@@ -57,8 +57,17 @@ class ConstructorPage(BasePage):
 
     def order(self):
         self.click(L.PLACE_ORDER)
-        self.wait.until(lambda d: re.search(r"\d+", self.visible(L.ORDER_NUMBER).text))
-        return int(re.search(r"\d+", self.visible(L.ORDER_NUMBER).text).group())
+
+        def order_number_loaded(_):
+            text = self.visible(L.ORDER_NUMBER).text.strip()
+            match = re.search(r"\d+", text)
+            if not match:
+                return False
+            number = int(match.group())
+            # 9999 is displayed by Stellar Burgers while a new order is processing.
+            return number if number > 0 and number != 9999 else False
+
+        return self.wait.until(order_number_loaded)
 
     def close_order(self):
         self.click(L.ORDER_CLOSE)
