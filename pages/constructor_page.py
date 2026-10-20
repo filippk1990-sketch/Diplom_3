@@ -20,6 +20,9 @@ class ConstructorPage(BasePage):
     def is_details_modal_open(self):
         return self.visible(L.MODAL).is_displayed()
 
+    def is_details_modal_closed(self):
+        return all(not element.is_displayed() for element in self.driver.find_elements(*L.MODAL))
+
     def close_modal(self):
         self.click(L.MODAL_CLOSE)
         self.wait.until(EC.invisibility_of_element_located(L.MODAL))
