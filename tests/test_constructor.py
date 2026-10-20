@@ -1,7 +1,6 @@
 import allure
 from pages.constructor_page import ConstructorPage
 from pages.feed_page import FeedPage
-from locators.locators import ConstructorLocators
 
 
 @allure.feature("Конструктор")
@@ -34,8 +33,7 @@ class TestConstructor:
         page.open()
         page.open_ingredient_details()
         page.close_modal()
-        assert not any(element.is_displayed() for element in
-                       driver.find_elements(*ConstructorLocators.MODAL))
+        assert page.is_details_modal_closed()
 
     @allure.title("После перетаскивания счётчик ингредиента увеличивается")
     def test_ingredient_counter(self, driver, menu):
