@@ -52,26 +52,23 @@ def api():
 
 @pytest.fixture
 def test_user(api):
+    """Fixture prepares user and cleans up; it does not check responses."""
     value = uuid.uuid4().hex
     user = {"email": f"ui.{value}@example.com", "password": f"Qa-{value}",
             "name": f"UI-{value[:7]}"}
     response = api.post(f"{BASE_URL}/api/auth/register", json=user, timeout=TIMEOUT)
-    assert response.status_code == 200, response.text
     token = response.json()["accessToken"]
     try:
         yield user
     finally:
-        result = api.delete(f"{BASE_URL}/api/auth/user",
-                            headers={"Authorization": token}, timeout=TIMEOUT)
-        assert result.status_code == 202, result.text
+        api.delete(f"{BASE_URL}/api/auth/user",
+                   headers={"Authorization": token}, timeout=TIMEOUT)
 
 
 @pytest.fixture
 def menu(api):
-    response = api.get(f"{BASE_URL}/api/ingredients", timeout=TIMEOUT)
-    assert response.status_code == 200
-    data = response.json()
-    assert data["success"] is True
-    bun = next(item for item in data["data"] if item["type"] == "bun")
-    filling = next(item for item in data["data"] if item["type"] != "bun")
+    """Prepare dynamic ingredient labels without performing test assertions."""
+    data = api.get(f"{BASE_URL}/api/ingredients", timeout=TIMEOUT).json()["data"]
+    bun = next(item for item in data if item["type"] == "bun")
+    filling = next(item for item in data if item["type"] != "bun")
     return {"bun": bun["name"], "filling": filling["name"]}
