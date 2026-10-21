@@ -52,7 +52,7 @@ def api():
 
 @pytest.fixture
 def test_user(api):
-    """Fixture prepares user and cleans up; it does not check responses."""
+    """Create an API user and release it during fixture teardown."""
     value = uuid.uuid4().hex
     user = {"email": f"ui.{value}@example.com", "password": f"Qa-{value}",
             "name": f"UI-{value[:7]}"}
@@ -61,8 +61,9 @@ def test_user(api):
     try:
         yield user
     finally:
-        api.delete(f"{BASE_URL}/api/auth/user",
-                   headers={"Authorization": token}, timeout=TIMEOUT)
+        cleanup = api.delete(f"{BASE_URL}/api/auth/user",
+                             headers={"Authorization": token}, timeout=TIMEOUT)
+        cleanup.raise_for_status()
 
 
 @pytest.fixture
